@@ -1,18 +1,18 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
+import uuid as uuid_pkg
 
 class StartCookingRequest(BaseModel):
-    recipe_id: int = Field(..., description="Recipe ID to start cooking")
-    is_demo: bool = Field(False, description="Is this a demo/guest session")
+    recipe_id: str = Field(..., description="Recipe ID to start cooking")
+    demo_session_id: Optional[str] = Field(None, description="Demo session ID for guest mode")
 
 class CookingSessionResponse(BaseModel):
-    id: int
-    recipe_id: int
+    id: uuid_pkg.UUID
+    recipe_id: uuid_pkg.UUID
     status: str
-    current_step: int
+    current_step_index: str
     started_at: datetime
-    is_demo: bool
     
     class Config:
         from_attributes = True
