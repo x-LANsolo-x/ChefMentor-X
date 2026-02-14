@@ -1,0 +1,25 @@
+{
+  "projectName": "BugOff",
+  "projectOwner": "x-LANsolo-x",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 80,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "x-LANsolo-x",
+      "name": "x-LANsolo-x",
+      "avatar_url": "https://avatars.githubusercontent.com/x-LANsolo-x",
+      "profile": "https://github.com/x-LANsolo-x",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance"
+      ]
+    }
+  ]
+}

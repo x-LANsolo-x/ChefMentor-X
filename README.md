@@ -216,8 +216,12 @@ For more details, see `SETUP.md`.
 
 ## Contributors
 
-<a href="https://github.com/x-LANsolo-x" title="x-LANsolo-x">
-  <img src="https://avatars.githubusercontent.com/x-LANsolo-x" alt="x-LANsolo-x" width="80" height="80" />
-</a>
+The full list of contributors is always available on GitHub:
+https://github.com/x-LANsolo-x/BugOff/graphs/contributors
+
+This project uses the All Contributors specification to keep the list below up to date.
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Made by Team BugOff
