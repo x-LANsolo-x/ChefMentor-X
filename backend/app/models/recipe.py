@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, Enum, ForeignKey, Text, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, Enum, ForeignKey, Text, Boolean, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -8,19 +8,41 @@ from app.db.base import Base
 class Recipe(Base):
     __tablename__ = "recipes"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, index=True)
     
     # Core Fields
-    name = Column(String(255), nullable=False, index=True)
-    difficulty = Column(String(50)) # easy, medium, hard
-    estimated_time_min = Column(Integer)
+    title = Column(String(255), nullable=False, index=True)
+    description = Column(Text, nullable=True)
+    difficulty = Column(String(12)) # BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+    
+    # Time fields
+    prep_time_minutes = Column(Integer, nullable=True)
+    cook_time_minutes = Column(Integer, nullable=True)
+    total_time_minutes = Column(Integer, nullable=True)
+    
+    # Servings & Nutrition
+    servings = Column(Integer, nullable=False, default=1)
+    calories = Column(Integer, nullable=True)
+    protein_grams = Column(Float, nullable=True)
+    carbs_grams = Column(Float, nullable=True)
+    fat_grams = Column(Float, nullable=True)
+    
+    # Categorization
+    cuisine_type = Column(String(100), nullable=True)
+    meal_type = Column(String(100), nullable=True)
+    tags = Column(Text, nullable=True)  # Store as JSON text
     
     # External API Links (RecipeDB)
-    external_id = Column(String(100), index=True, nullable=True) # ID from RecipeDB
-    source_url = Column(Text, nullable=True)
     image_url = Column(Text, nullable=True)
     
+    # Status flags
+    is_active = Column(Boolean, nullable=False, default=True)
+    is_featured = Column(Boolean, nullable=False, default=False)
+    ai_generated = Column(Boolean, nullable=False, default=False)
+    ai_model = Column(String(50), nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
     steps = relationship("RecipeStep", back_populates="recipe", order_by="RecipeStep.step_number", cascade="all, delete-orphan")
@@ -29,12 +51,19 @@ class Recipe(Base):
 class RecipeStep(Base):
     __tablename__ = "recipe_steps"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    recipe_id = Column(UUID(as_uuid=True), ForeignKey('recipes.id'), nullable=False, index=True)
+    id = Column(Integer, primary_key=True, index=True)
+    recipe_id = Column(Integer, ForeignKey('recipes.id'), nullable=False, index=True)
     
     step_number = Column(Integer, nullable=False)
+    title = Column(String(255), nullable=True)
     instruction = Column(Text, nullable=False)
-    expected_state = Column(String(255)) # e.g. "Onions are golden brown"
+    duration_minutes = Column(Integer, nullable=True)
+    timer_required = Column(Boolean, nullable=False, default=False)
+    image_url = Column(Text, nullable=True)
+    video_url = Column(Text, nullable=True)
+    ai_tips = Column(Text, nullable=True)
+    common_mistakes = Column(Text, nullable=True)  # Store as JSON text
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
     recipe = relationship("Recipe", back_populates="steps")

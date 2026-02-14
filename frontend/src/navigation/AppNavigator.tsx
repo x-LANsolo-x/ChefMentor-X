@@ -1,51 +1,20 @@
-/**
- * ChefMentor X – Navigation Configuration
- *
- * Structure:
- *   RootStack
- *   ├── Splash (public)
- *   ├── Login (public)
- *   ├── Onboarding (public)
- *   └── MainTabs (authenticated / demo)
- *       ├── CookTab (stack)
- *       │   ├── RecipeList
- *       │   ├── RecipeDetails
- *       │   ├── LiveCooking
- *       │   └── Completion
- *       └── AnalyzeTab (stack)
- *           ├── UploadAnalysis
- *           ├── AnalysisLoading
- *           └── DiagnosisResult
- */
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, View, StyleSheet } from 'react-native';
-import { Colors, Typography, TouchTarget } from '../constants/theme';
-import type {
-    RootStackParamList,
-    MainTabParamList,
-    CookStackParamList,
-    AnalyzeStackParamList,
-} from '../types';
 
-import {
-    SplashScreen,
-    LoginScreen,
-    OnboardingScreen,
-    RecipeListScreen,
-    RecipeDetailsScreen,
-    LiveCookingScreen,
-    CompletionScreen,
-    UploadAnalysisScreen,
-    AnalysisLoadingScreen,
-    DiagnosisResultScreen,
-} from '../screens';
+// Screens
+import SplashScreen from '../screens/SplashScreen';
+import LoginScreen from '../screens/LoginScreen';
+import CookScreen from '../screens/CookScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import LiveCookingScreen from '../screens/LiveCookingScreen';
+import AnalyzeScreen from '../screens/AnalyzeScreen';
 
-// ─── Stack Navigators ──────────────────────────────
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
+<<<<<<< HEAD
 const RootStack = createStackNavigator<RootStackParamList>();
 const CookStack = createStackNavigator<CookStackParamList>();
 const AnalyzeStack = createStackNavigator<AnalyzeStackParamList>();
@@ -183,3 +152,27 @@ const styles = StyleSheet.create({
         fontSize: 22,
     },
 });
+=======
+function MainTabs() {
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen name="Cook" component={CookScreen} />
+      <Tab.Screen name="Analyze" component={AnalyzeScreen} />
+    </Tab.Navigator>
+  );
+}
+
+export default function AppNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="MainTabs" component={MainTabs} />
+        <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{ headerShown: true, title: 'Recipe' }} />
+        <Stack.Screen name="LiveCooking" component={LiveCookingScreen} options={{ headerShown: true, title: 'Live Mode' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+>>>>>>> 965074bba05a4c69f6ad65a0d06051e580cc66b8
