@@ -1,156 +1,133 @@
-# 🍳 ChefMentor X
+# BugOff
 
-> **AI-Powered Voice-First Cooking Assistant**
+BugOff is a voice-first, AI-assisted cooking companion that helps home cooks follow recipes, ask questions hands-free, and learn from mistakes. It combines step-by-step guidance with real-time assistance so users can cook confidently without constantly touching their phones.
 
-ChefMentor X is a revolutionary mobile cooking application that combines AI-powered guidance with voice-first interaction to make cooking accessible, educational, and enjoyable for everyone.
+## Features
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Node](https://img.shields.io/badge/Node-18+-green.svg)](https://nodejs.org/)
-[![React Native](https://img.shields.io/badge/React_Native-0.81-61dafb.svg)](https://reactnative.dev/)
+- Voice-first cooking flow with hands-free controls
+- Context-aware coaching during each step
+- Photo-based failure analysis to diagnose what went wrong
+- Clear, accessible UI designed for use while cooking
+- Demo mode for trying the app without an account
 
----
+## Tech Stack
 
-## ✨ Features
+**Backend**
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- Redis
+- Alembic
 
-### 🎙️ **Voice-First Design**
-- **Hands-Free Cooking**: Control everything with your voice using Whisper STT
-- **Natural Language**: Speak naturally - "What's next?", "Repeat that", "Set timer"
-- **Text-to-Speech**: Clear audio instructions while you cook
+**Frontend**
+- React Native
+- Expo
+- TypeScript
+- Zustand
+- React Navigation
 
-### 🤖 **AI Cooking Coach**
-- **Real-Time Guidance**: Google Gemini AI provides contextual cooking tips
-- **Adaptive Instructions**: Adjusts based on your skill level and progress
-- **Smart Q&A**: Ask questions anytime - "How do I know when it's done?"
+**AI/ML Services**
+- Google Gemini
+- Groq Whisper
+- Google Text-to-Speech
 
-### 📸 **Failure Analysis**
-- **Upload Failed Dishes**: Take a photo of what went wrong
-- **AI Diagnosis**: Get detailed analysis of what happened
-- **Improvement Tips**: Learn specific steps to improve next time
+**Infrastructure**
+- Cloudinary
+- Railway (recommended)
+- Upstash (recommended)
 
-### 🍽️ **User-Friendly Design**
-- **Large Touch Targets**: Easy to use with messy hands
-- **Two-Tab Interface**: Simple navigation (Cook vs Analyze)
-- **Demo Mode**: Try without creating an account
-- **Progressive Skill Building**: Learn as you cook
-
----
-
-## 🚀 Quick Start
+## Installation
 
 ### Prerequisites
 
-- **Python 3.10+**
-- **Node.js 18+**
-- **PostgreSQL 14+**
-- **Redis 6+**
+- Python 3.10+
+- Node.js 18+
+- PostgreSQL 14+
+- Redis 6+
 
-### Installation
+### Clone the Repository
 
 ```bash
-# Clone repository
-git clone https://github.com/YOUR_USERNAME/chefmentor-x.git
-cd chefmentor-x
+git clone https://github.com/x-LANsolo-x/BugOff.git
+cd BugOff
+```
 
-# Backend setup
+### Backend Setup
+
+```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Frontend setup
-cd ../frontend
-npm install
-
-# Configure environment
-cp backend/.env.example backend/.env
-# Edit backend/.env with your API keys
 ```
 
-### Run the App
+### Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+```
+
+### Environment Configuration
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Update `backend/.env` with the required keys and values:
+
+- Database URL
+- Redis URL
+- Cloudinary credentials
+- Google Gemini API key
+- Groq Whisper API key
+- Google TTS credentials
+
+### Database Setup
+
+1. Ensure PostgreSQL is running.
+2. Create a database (for example, `bugoff`).
+3. Update the `DATABASE_URL` in `backend/.env`.
+4. Apply migrations:
+
+```bash
+cd backend
+alembic upgrade head
+```
+
+### Run the Application
 
 ```bash
 # Terminal 1 - Backend
 cd backend
 source venv/bin/activate
 uvicorn app.main:app --reload
+```
 
+```bash
 # Terminal 2 - Frontend
 cd frontend
 npm start
 ```
 
-📖 **For detailed setup instructions, see [SETUP.md](SETUP.md)**
+### Tests
 
----
+```bash
+# Backend tests
+cd backend
+pytest
 
-## 🏗️ Tech Stack
+# Frontend tests
+cd frontend
+npm test
+```
 
-### Backend
-- **FastAPI** - Modern Python web framework
-- **SQLAlchemy** - ORM for database management
-- **PostgreSQL** - Primary database
-- **Redis** - Caching and session management
-- **Alembic** - Database migrations
-
-### Frontend
-- **React Native** - Cross-platform mobile framework
-- **Expo** - Development platform
-- **TypeScript** - Type-safe JavaScript
-- **Zustand** - State management
-- **React Navigation** - Routing and navigation
-
-### AI/ML Services
-- **Google Gemini** - AI cooking guidance and analysis
-- **Groq Whisper** - Speech-to-text processing
-- **Google TTS** - Text-to-speech output
-
-### Infrastructure
-- **Cloudinary** - Image storage and processing
-- **Railway** - Backend deployment (recommended)
-- **Upstash** - Serverless Redis (recommended)
-
----
-
-## 📱 Screenshots
-
-> Coming soon! See `/stitch` folder for UI prototypes
-
----
-
-## 📚 Documentation
-
-Comprehensive documentation is available in the `/docs` and `/md` folders:
-
-### Getting Started
-- 📋 [**SETUP.md**](SETUP.md) - Complete installation guide
-- 🗺️ [**IMPLEMENTATION_PLAN.md**](docs/IMPLEMENTATION_PLAN.md) - Development roadmap
-- 📅 [**PROJECT_TIMELINE_GANTT.md**](docs/PROJECT_TIMELINE_GANTT.md) - Timeline and milestones
-
-### Technical Documentation
-- 🏗️ [**Backend Structure**](md/chef_mentor_x_backend_structure_backend_structure.md)
-- 🎨 [**Frontend Design System**](md/chef_mentor_x_frontend_design_system_frontend_guidelines.md)
-- 🔧 [**Technology Stack**](md/chef_mentor_x_technology_stack_tech_stack.md)
-- 🧪 [**Testing Strategy**](md/chef_mentor_x_testing_strategy.md)
-
-### Feature Specifications
-- 🤖 [**AI/ML Strategy**](md/chef_mentor_x_ai_ml_strategy.md)
-- 🎙️ [**Voice Interaction Spec**](md/chef_mentor_x_voice_interaction_spec.md)
-- 🍲 [**Recipe Integration Guide**](md/chef_mentor_x_recipe_integration_guide.md)
-- 🔐 [**Privacy & Security**](md/chef_mentor_x_privacy_security_policy.md)
-
-### Product
-- 📄 [**Product Requirements**](md/chef_mentor_x_final_prd_v_2_two_tab_experience.md)
-- 🔄 [**Application Flow**](md/chef_mentor_x_application_flow_app_flow.md)
-
----
-
-## 🗂️ Project Structure
+## Project Structure
 
 ```
-chefmentor-x/
+BugOff/
 ├── backend/                 # Python FastAPI backend
-│   ├── app/                 # Application code (to be created)
+│   ├── app/                 # Application code
 │   ├── tests/               # Backend tests
 │   ├── alembic/             # Database migrations
 │   ├── .env                 # Environment variables (not in git)
@@ -158,7 +135,7 @@ chefmentor-x/
 │   └── requirements.txt     # Python dependencies
 │
 ├── frontend/                # React Native mobile app
-│   ├── src/                 # Source code (to be created)
+│   ├── src/                 # Source code
 │   │   ├── screens/         # Screen components
 │   │   ├── components/      # Reusable components
 │   │   ├── services/        # API and service layer
@@ -172,82 +149,32 @@ chefmentor-x/
 ├── docs/                    # Planning and implementation docs
 ├── md/                      # Detailed technical specifications
 ├── stitch/                  # UI design prototypes (HTML/CSS)
-│
 ├── SETUP.md                 # Setup instructions
-├── README.md                # This file
-└── .gitignore               # Git ignore rules
+└── README.md                # This file
 ```
 
----
+## Documentation
 
-## 🛣️ Roadmap
+Additional documentation is available in the `docs` and `md` directories:
 
-### ✅ Phase 0: Setup (Complete)
-- [x] Backend environment setup
-- [x] Frontend Expo initialization
-- [x] Dependency installation
-- [x] Environment configuration
+- `SETUP.md` - Complete installation guide
+- `docs/IMPLEMENTATION_PLAN.md` - Development roadmap
+- `docs/PROJECT_TIMELINE_GANTT.md` - Timeline and milestones
+- `md/chef_mentor_x_backend_structure_backend_structure.md` - Backend structure
+- `md/chef_mentor_x_frontend_design_system_frontend_guidelines.md` - Frontend design system
+- `md/chef_mentor_x_technology_stack_tech_stack.md` - Technology stack details
+- `md/chef_mentor_x_testing_strategy.md` - Testing strategy
+- `md/chef_mentor_x_ai_ml_strategy.md` - AI/ML strategy
+- `md/chef_mentor_x_voice_interaction_spec.md` - Voice interaction specification
+- `md/chef_mentor_x_recipe_integration_guide.md` - Recipe integration guide
+- `md/chef_mentor_x_privacy_security_policy.md` - Privacy and security policy
+- `md/chef_mentor_x_final_prd_v_2_two_tab_experience.md` - Product requirements
+- `md/chef_mentor_x_application_flow_app_flow.md` - Application flow
 
-### 🚧 Phase 1: Backend Foundation (In Progress)
-- [ ] Database models
-- [ ] API endpoints
-- [ ] Authentication system
-- [ ] AI service integration
+## Troubleshooting
 
-### 📋 Phase 2: Frontend Development (Planned)
-- [ ] Navigation structure
-- [ ] Core UI components
-- [ ] Screen implementations
-- [ ] State management
+**Dependencies fail to install**
 
-### 📋 Phase 3: Integration (Planned)
-- [ ] Connect frontend to backend
-- [ ] Voice interaction
-- [ ] Camera integration
-- [ ] Testing and QA
-
-### 📋 Phase 4: Deployment (Planned)
-- [ ] Backend deployment
-- [ ] Mobile app build
-- [ ] App store submission
-- [ ] Production monitoring
-
----
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd backend
-pytest
-
-# Frontend tests
-cd frontend
-npm test
-
-# E2E tests
-npm run test:e2e
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Issue: Dependencies won't install**
 ```bash
 # Backend
 pip install --upgrade pip
@@ -258,56 +185,39 @@ rm -rf node_modules package-lock.json
 npm install --legacy-peer-deps
 ```
 
-**Issue: Database connection failed**
-- Ensure PostgreSQL is running: `pg_ctl status`
-- Check connection string in `.env`
-- Verify port 5432 is not in use
+**Database connection issues**
 
-**Issue: Expo won't start**
+- Confirm PostgreSQL is running.
+- Verify the `DATABASE_URL` in `backend/.env`.
+- Check that port 5432 is available.
+
+**Expo fails to start**
+
 ```bash
 cd frontend
-npx expo start -c  # Clear cache
+npx expo start -c
 ```
 
-For more solutions, see [SETUP.md#troubleshooting](SETUP.md#troubleshooting)
+For more details, see `SETUP.md`.
 
----
+## Contributing
 
-## 📄 License
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m "Add feature"`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a pull request
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Contact & Support
 
----
+- Issues: https://github.com/x-LANsolo-x/BugOff/issues
+- Email: shashwatvatsyayan@gmail.com
+- GitHub: https://github.com/x-LANsolo-x
 
-## 🙏 Acknowledgments
+## Contributors
 
-- **Google Gemini** for AI-powered cooking assistance
-- **Groq** for lightning-fast speech recognition
-- **Cloudinary** for image processing
-- **FastAPI** and **React Native** communities
-- All contributors and testers
+<a href="https://github.com/x-LANsolo-x" title="x-LANsolo-x">
+  <img src="https://avatars.githubusercontent.com/x-LANsolo-x" alt="x-LANsolo-x" width="80" height="80" />
+</a>
 
----
-
-## 📞 Contact & Support
-
-- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/chefmentor-x/issues)
-- **Email**: support@chefmentorx.com
-- **Discord**: [Join our community](https://discord.gg/chefmentorx)
-
----
-
-## 🌟 Show Your Support
-
-If you find ChefMentor X helpful, please consider:
-- ⭐ Starring the repository
-- 🐛 Reporting bugs
-- 💡 Suggesting features
-- 📖 Improving documentation
-- 🤝 Contributing code
-
----
-
-**Made with ❤️ by the ChefMentor X Team**
-
-*Empowering home cooks with AI-powered guidance*
+Made by Team BugOff
