@@ -23,7 +23,7 @@ class AuditLog(Base):
     resource_id = Column(UUID(as_uuid=True), nullable=True)
     
     # Details
-    metadata = Column(JSONB, default={})
+    details = Column(JSONB, default={})  # Renamed from 'metadata' to avoid SQLAlchemy conflict
     ip_address = Column(String(45), nullable=True)
     
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

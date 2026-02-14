@@ -11,27 +11,7 @@
  *  - Version footer
  */
 
-import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-    Switch,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../constants/theme';
-import { useAuthStore } from '../stores/authStore';
-
-export default function SettingsScreen({ navigation }: any) {
-    const { user } = useAuthStore();
-
-    const [beginnerMode, setBeginnerMode] = useState(false);
-    const [wakeWord, setWakeWord] = useState(true);
-    const [pushNotifications, setPushNotifications] = useState(true);
-    const [weeklyMealPlan, setWeeklyMealPlan] = useState(false);
-    const [voiceSpeed, setVoiceSpeed] = useState<'Slow' | 'Normal' | 'Fast'>('Normal');
+Tool call argument 'replace' pruned from message history.
 
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
@@ -60,7 +40,7 @@ export default function SettingsScreen({ navigation }: any) {
                         <Text style={styles.ucName}>{user?.name || 'Chef'}</Text>
                         <Text style={styles.ucEmail}>{user?.email || 'guest@chefmentorx.app'}</Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleEditProfile}>
                         <Text style={styles.editLink}>Edit</Text>
                     </TouchableOpacity>
                 </View>
@@ -84,14 +64,14 @@ export default function SettingsScreen({ navigation }: any) {
                                 key={speed}
                                 style={[
                                     styles.speedPill,
-                                    voiceSpeed === speed && styles.speedPillActive,
+                                    settings.voiceSpeed === speed && styles.speedPillActive,
                                 ]}
-                                onPress={() => setVoiceSpeed(speed)}
+                                onPress={() => settings.setVoiceSpeed(speed)}
                             >
                                 <Text
                                     style={[
                                         styles.speedLabel,
-                                        voiceSpeed === speed && styles.speedLabelActive,
+                                        settings.voiceSpeed === speed && styles.speedLabelActive,
                                     ]}
                                 >
                                     {speed}
@@ -112,8 +92,8 @@ export default function SettingsScreen({ navigation }: any) {
                             </View>
                         </View>
                         <Switch
-                            value={beginnerMode}
-                            onValueChange={setBeginnerMode}
+                            value={settings.beginnerMode}
+                            onValueChange={settings.setBeginnerMode}
                             trackColor={{ false: Colors.neutral[200], true: Colors.brand.orange }}
                             thumbColor={Colors.white}
                         />
@@ -131,8 +111,8 @@ export default function SettingsScreen({ navigation }: any) {
                             </View>
                         </View>
                         <Switch
-                            value={wakeWord}
-                            onValueChange={setWakeWord}
+                            value={settings.wakeWordEnabled}
+                            onValueChange={settings.setWakeWordEnabled}
                             trackColor={{ false: Colors.neutral[200], true: Colors.brand.orange }}
                             thumbColor={Colors.white}
                         />
@@ -151,8 +131,8 @@ export default function SettingsScreen({ navigation }: any) {
                             </View>
                         </View>
                         <Switch
-                            value={pushNotifications}
-                            onValueChange={setPushNotifications}
+                            value={settings.pushNotifications}
+                            onValueChange={settings.setPushNotifications}
                             trackColor={{ false: Colors.neutral[200], true: Colors.brand.orange }}
                             thumbColor={Colors.white}
                         />
@@ -169,8 +149,8 @@ export default function SettingsScreen({ navigation }: any) {
                             </View>
                         </View>
                         <Switch
-                            value={weeklyMealPlan}
-                            onValueChange={setWeeklyMealPlan}
+                            value={settings.weeklyMealPlan}
+                            onValueChange={settings.setWeeklyMealPlan}
                             trackColor={{ false: Colors.neutral[200], true: Colors.brand.orange }}
                             thumbColor={Colors.white}
                         />
@@ -180,7 +160,7 @@ export default function SettingsScreen({ navigation }: any) {
                 {/* ── GENERAL ── */}
                 <Text style={styles.sectionLabel}>GENERAL</Text>
                 <View style={styles.card}>
-                    <TouchableOpacity style={styles.row}>
+                    <TouchableOpacity style={styles.row} onPress={handlePrivacySecurity}>
                         <View style={styles.rowLeft}>
                             <Text style={styles.rowIcon}>🔒</Text>
                             <Text style={styles.rowTitle}>Privacy & Security</Text>
@@ -190,7 +170,7 @@ export default function SettingsScreen({ navigation }: any) {
 
                     <View style={styles.divider} />
 
-                    <TouchableOpacity style={styles.row}>
+                    <TouchableOpacity style={styles.row} onPress={handleHelpSupport}>
                         <View style={styles.rowLeft}>
                             <Text style={styles.rowIcon}>❓</Text>
                             <Text style={styles.rowTitle}>Help & Support</Text>
@@ -202,7 +182,7 @@ export default function SettingsScreen({ navigation }: any) {
                 {/* ── DANGER ZONE ── */}
                 <Text style={[styles.sectionLabel, { color: Colors.error }]}>DANGER ZONE</Text>
                 <View style={[styles.card, styles.dangerCard]}>
-                    <TouchableOpacity style={styles.row}>
+                    <TouchableOpacity style={styles.row} onPress={handleDeleteAccount}>
                         <View style={styles.rowLeft}>
                             <Text style={styles.rowIcon}>🗑️</Text>
                             <View>
