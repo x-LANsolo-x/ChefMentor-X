@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     marginTop: -24,
     paddingHorizontal: Spacing[6],
     paddingTop: Spacing[8],
-    paddingBottom: Spacing[6],
+    paddingBottom: Spacing[10],
   },
   stepLabel: {
     fontFamily: 'DMSans-Bold',
@@ -555,7 +555,8 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 16,
+    marginTop: 8,
+    marginBottom: 12,
   },
   askAiBtn: {
     flex: 1,
@@ -598,7 +599,8 @@ const styles = StyleSheet.create({
   /* Bottom controls */
   bottomRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
+    marginTop: 8,
   },
   outlineBtn: {
     flex: 1,
@@ -728,7 +730,8 @@ const styles = StyleSheet.create({
     borderColor: '#EF4444',
   },
   voiceFeedback: {
-    marginTop: 10,
+    marginTop: 12,
+    marginBottom: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
     backgroundColor: '#F0F5F1',
