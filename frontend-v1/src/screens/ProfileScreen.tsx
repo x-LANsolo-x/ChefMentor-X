@@ -11,18 +11,22 @@
  *  - Sign Out button
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    Modal,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../constants/theme';
 import { useAuthStore } from '../stores/authStore';
+import { useProfileStore } from '../stores/profileStore';
 import FadeIn from '../components/FadeIn';
+import { TextInput, Button } from '../components';
 
 const STATS = [
     { value: '24', label: 'Recipes\nAttempted', color: Colors.brand.peach },
@@ -44,10 +48,37 @@ const QUICK_ACTIONS = [
 
 export default function ProfileScreen({ navigation }: any) {
     const { user, isDemo, logout } = useAuthStore();
+    const profileStore = useProfileStore();
+    
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [editingName, setEditingName] = useState(user?.name || '');
+    const [editingDifficulty, setEditingDifficulty] = useState('Intermediate');
+    const [editingDietary, setEditingDietary] = useState('No Restrictions');
 
     const handleLogout = async () => {
         await logout();
         navigation.reset({ index: 0, routes: [{ name: 'Splash' }] });
+    };
+
+    const handleEditProfile = () => {
+        setEditingName(user?.name || '');
+        setEditModalVisible(true);
+    };
+
+    const handleSaveProfile = async () => {
+        try {
+            // Update profile in store
+            await profileStore.updateProfile({
+                name: editingName,
+                difficulty: editingDifficulty,
+                dietary: editingDietary,
+            });
+            
+            Alert.alert('Success', 'Profile updated successfully!');
+            setEditModalVisible(false);
+        } catch (error) {
+            Alert.alert('Error', 'Failed to update profile. Please try again.');
+        }
     };
 
     return (
@@ -92,7 +123,7 @@ export default function ProfileScreen({ navigation }: any) {
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
                             <Text style={styles.sectionTitle}>Cooking Profile</Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={handleEditProfile}>
                                 <Text style={styles.editLink}>Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -142,6 +173,96 @@ export default function ProfileScreen({ navigation }: any) {
                 {/* Footer */}
                 <Text style={styles.version}>ChefMentor X v1.0.0</Text>
             </ScrollView>
+
+            {/* ── Edit Profile Modal ── */}
+            <Modal
+                visible={editModalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setEditModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Edit Cooking Profile</Text>
+                            <TouchableOpacity onPress={() => setEditModalVisible(false)}>
+                                <Text style={styles.modalClose}>✕</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {/* Name Input */}
+                            <View style={styles.inputGroup}>
+                                <Text style={styles.inputLabel}>Name</Text>
+                                <TextInput
+                                    value={editingName}
+                                    onChangeText={setEditingName}
+                                    placeholder="Enter your name"
+                                />
+                            </View>
+
+                            {/* Difficulty Level */}
+                            <View style={styles.inputGroup}>
+                                <Text style={styles.inputLabel}>Difficulty Level</Text>
+                                <View style={styles.optionsRow}>
+                                    {['Beginner', 'Intermediate', 'Advanced'].map((level) => (
+                                        <TouchableOpacity
+                                            key={level}
+                                            style={[
+                                                styles.optionPill,
+                                                editingDifficulty === level && styles.optionPillActive,
+                                            ]}
+                                            onPress={() => setEditingDifficulty(level)}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.optionText,
+                                                    editingDifficulty === level && styles.optionTextActive,
+                                                ]}
+                                            >
+                                                {level}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            </View>
+
+                            {/* Dietary Preference */}
+                            <View style={styles.inputGroup}>
+                                <Text style={styles.inputLabel}>Dietary Preference</Text>
+                                <View style={styles.optionsRow}>
+                                    {['No Restrictions', 'Vegetarian', 'Vegan', 'Gluten-Free'].map((diet) => (
+                                        <TouchableOpacity
+                                            key={diet}
+                                            style={[
+                                                styles.optionPill,
+                                                editingDietary === diet && styles.optionPillActive,
+                                            ]}
+                                            onPress={() => setEditingDietary(diet)}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.optionText,
+                                                    editingDietary === diet && styles.optionTextActive,
+                                                ]}
+                                            >
+                                                {diet}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            </View>
+
+                            {/* Save Button */}
+                            <Button
+                                title="Save Changes"
+                                onPress={handleSaveProfile}
+                                style={styles.saveButton}
+                            />
+                        </ScrollView>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }
