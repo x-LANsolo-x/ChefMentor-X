@@ -4,11 +4,13 @@ from sqlalchemy.orm import selectinload
 from fastapi import HTTPException
 from app.models.session import CookingSession
 from app.models.recipe import Recipe
+from app.services.ai_mentor import AIMentorService
 from datetime import datetime
 
 class CookingService:
     def __init__(self, db: AsyncSession):
         self.db = db
+        self.ai = AIMentorService()
     
     async def start_session(self, recipe_id: int, user_id: int = None, is_demo: bool = False):
         # 1. Verify Recipe Exists
@@ -56,15 +58,23 @@ class CookingService:
         steps.sort(key=lambda x: x.step_number)
         
         if current_index >= len(steps):
-            return {"message": "Recipe complete!", "is_last_step": True, "step_number": current_index, "instruction": "All done!"}
+            return {"message": "Recipe complete!", "is_last_step": True, "step_number": current_index, "instruction": "All done!", "guidance": "Congratulations! You've completed the recipe!"}
             
         step = steps[current_index]
+        
+        # Get AI Guidance (with error handling)
+        guidance = "Keep going, you're doing great!"
+        try:
+            guidance = await self.ai.get_step_guidance(step.instruction)
+        except Exception as e:
+            print(f"AI Service Skipped: {e}")
         
         return {
             "step_number": step.step_number,
             "instruction": step.instruction,
             "expected_state": getattr(step, 'expected_state', None),
-            "is_last_step": (current_index == len(steps) - 1)
+            "is_last_step": (current_index == len(steps) - 1),
+            "guidance": guidance
         }
 
     async def advance_step(self, session_id: int):
