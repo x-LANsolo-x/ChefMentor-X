@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
         color: Colors.textMain,
     },
 
-    scroll: { paddingHorizontal: Spacing[6], paddingBottom: 40 },
+    scroll: { paddingHorizontal: Spacing[6], paddingBottom: 60 },
 
     /* User card */
     userCard: {
@@ -368,6 +368,7 @@ const styles = StyleSheet.create({
         fontSize: Typography.fontSize.xs,
         color: Colors.neutral[400],
         textAlign: 'center',
-        marginTop: Spacing[2],
+        marginTop: Spacing[4],
+        marginBottom: Spacing[4],
     },
 });
