@@ -13,4 +13,5 @@ export { default as SkeletonLoader } from './SkeletonLoader';
 export { default as EmptyStateView } from './EmptyState';
 export { default as ErrorStateView } from './ErrorState';
 export { default as FadeIn } from './FadeIn';
+export { default as VoiceInputButton } from './VoiceInputButton';
 
