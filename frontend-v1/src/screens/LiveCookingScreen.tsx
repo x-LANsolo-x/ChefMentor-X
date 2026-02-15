@@ -785,4 +785,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.accent[700],
   },
+  
+  /* Live Camera Button */
+  cameraBtn: {
+    backgroundColor: Colors.brand.purple,
+    borderRadius: BorderRadius.full,
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.sm,
+  },
 });
