@@ -25,6 +25,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../constants/theme';
 import { voiceService } from '../services/voiceService';
+import { apiClient } from '../services/apiClient';
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
@@ -70,6 +71,8 @@ export default function LiveCookingScreen({ navigation }: any) {
   const [showTip, setShowTip] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [voiceFeedback, setVoiceFeedback] = useState<string | null>(null);
+  const [aiTip, setAiTip] = useState<string | null>(null);
+  const [isLoadingTip, setIsLoadingTip] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -209,6 +212,40 @@ export default function LiveCookingScreen({ navigation }: any) {
     navigation.goBack();
   };
 
+  // Fetch AI Tip from backend
+  const handleAskAI = async () => {
+    if (showTip && aiTip) {
+      // If already showing, just toggle off
+      setShowTip(false);
+      return;
+    }
+
+    setShowTip(true);
+    setIsLoadingTip(true);
+
+    try {
+      const response = await apiClient.post('/api/v1/cooking/ask-mentor', {
+        step_number: currentStep + 1,
+        step_instruction: step.instruction,
+        recipe_name: 'Perfect Scrambled Eggs',
+        question: 'Give me a helpful tip for this step'
+      });
+
+      const tip = response.data?.tip || response.data?.advice || step.tip;
+      setAiTip(tip);
+      
+      // Read the tip aloud
+      if (voiceService.getSettings().autoRead) {
+        voiceService.speak(tip);
+      }
+    } catch (error) {
+      console.error('Error fetching AI tip:', error);
+      setAiTip(step.tip); // Fallback to static tip
+    } finally {
+      setIsLoadingTip(false);
+    }
+  };
+
   const handleRestart = () => {
     setIsPaused(false);
     setCurrentStep(0);
@@ -273,7 +310,11 @@ export default function LiveCookingScreen({ navigation }: any) {
         {showTip && (
           <View style={styles.tipCard}>
             <Text style={styles.tipIcon}>💡</Text>
-            <Text style={styles.tipText}>{step.tip}</Text>
+            {isLoadingTip ? (
+              <Text style={styles.tipText}>🤖 AI is thinking...</Text>
+            ) : (
+              <Text style={styles.tipText}>{aiTip || step.tip}</Text>
+            )}
           </View>
         )}
 
@@ -282,11 +323,11 @@ export default function LiveCookingScreen({ navigation }: any) {
           {/* Ask AI */}
           <TouchableOpacity
             style={styles.askAiBtn}
-            onPress={() => setShowTip(!showTip)}
+            onPress={handleAskAI}
             activeOpacity={0.85}
           >
-            <Text style={{ fontSize: 18 }}>🎙️</Text>
-            <Text style={styles.askAiLabel}>Ask AI</Text>
+            <Text style={{ fontSize: 18 }}>💡</Text>
+            <Text style={styles.askAiLabel}>{showTip ? 'Hide Tip' : 'Ask AI'}</Text>
           </TouchableOpacity>
 
           {/* Next Step */}

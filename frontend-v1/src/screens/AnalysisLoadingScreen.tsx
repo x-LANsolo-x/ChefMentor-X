@@ -30,8 +30,10 @@ const STEPS = [
     { label: 'Generating diagnosis...', delay: 4500 },
 ];
 
-export default function AnalysisLoadingScreen({ navigation }: any) {
+export default function AnalysisLoadingScreen({ navigation, route }: any) {
+    const { imageUri, context } = route?.params || {};
     const [completedSteps, setCompletedSteps] = useState(0);
+    const [error, setError] = useState<string | null>(null);
     const pulseAnim = useRef(new Animated.Value(0.5)).current;
     const spinAnim = useRef(new Animated.Value(0)).current;
     const fadeIn = useRef(new Animated.Value(0)).current;
@@ -59,25 +61,81 @@ export default function AnalysisLoadingScreen({ navigation }: any) {
         Animated.timing(fadeIn, { toValue: 1, duration: 600, useNativeDriver: true }).start();
     }, []);
 
-    // Progress + step checklist
+    // Upload image and analyze
     useEffect(() => {
-        Animated.timing(progressAnim, {
-            toValue: 100,
-            duration: 6000,
-            easing: Easing.out(Easing.cubic),
-            useNativeDriver: false,
-        }).start();
+        const analyzeImage = async () => {
+            try {
+                // Animate progress
+                Animated.timing(progressAnim, {
+                    toValue: 100,
+                    duration: 6000,
+                    easing: Easing.out(Easing.cubic),
+                    useNativeDriver: false,
+                }).start();
 
-        STEPS.forEach((step, i) => {
-            setTimeout(() => setCompletedSteps(i + 1), step.delay + 1200);
-        });
+                // Step through checklist
+                STEPS.forEach((step, i) => {
+                    setTimeout(() => setCompletedSteps(i + 1), step.delay + 1200);
+                });
 
-        // Navigate after completion
-        const timer = setTimeout(() => {
-            navigation.replace('DiagnosisResult');
-        }, 6500);
-        return () => clearTimeout(timer);
-    }, []);
+                if (!imageUri) {
+                    setError('No image provided');
+                    return;
+                }
+
+                // Create form data for image upload
+                const formData = new FormData();
+                
+                // Extract filename from URI
+                const filename = imageUri.split('/').pop() || 'photo.jpg';
+                const match = /\.(\w+)$/.exec(filename);
+                const type = match ? `image/${match[1]}` : 'image/jpeg';
+
+                formData.append('image', {
+                    uri: imageUri,
+                    name: filename,
+                    type: type,
+                } as any);
+
+                // Add context data
+                if (context) {
+                    formData.append('heat_level', context.heat_level || '');
+                    formData.append('timing', context.timing || '');
+                    formData.append('modifications', JSON.stringify(context.modifications || []));
+                    formData.append('notes', context.notes || '');
+                }
+
+                // Call the backend API
+                const response = await fetch('http://localhost:8000/api/v1/failure/analyze', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+
+                const result = await response.json();
+
+                // Navigate to results
+                setTimeout(() => {
+                    navigation.replace('DiagnosisResult', { analysis: result });
+                }, 6500);
+
+            } catch (err: any) {
+                console.error('Analysis error:', err);
+                setError(err.message || 'Failed to analyze image');
+                setTimeout(() => {
+                    navigation.goBack();
+                }, 3000);
+            }
+        };
+
+        analyzeImage();
+    }, [imageUri, context]);
 
     const spin = spinAnim.interpolate({
         inputRange: [0, 1],
