@@ -40,9 +40,14 @@ export default function LoginScreen({ navigation }: any) {
     });
 
     useEffect(() => {
-        if (response?.type === 'success') {
-            const { id_token } = response.params;
-            handleGoogleLogin(id_token);
+        if (response) {
+            console.log("Google Auth Response:", JSON.stringify(response, null, 2));
+            if (response.type === 'error') {
+                setError(`Auth Error: ${response.error?.code || 'Unknown'} - ${response.error?.message || response.params?.error_description || 'No details'}`);
+            } else if (response.type === 'success') {
+                const { id_token } = response.params; // or authentication.idToken
+                handleGoogleLogin(id_token || response.authentication?.idToken);
+            }
         }
     }, [response]);
 
@@ -147,192 +152,197 @@ export default function LoginScreen({ navigation }: any) {
 
             {/* Footer */}
             <View style={styles.footer}>
-                <Text style={styles.terms}>
-                    By continuing, you agree to our{' '}
-                    <Text style={styles.termsLink}>Terms</Text> &{' '}
-                    <Text style={styles.termsLink}>Privacy Policy</Text>
+                {/* Terms */}
+                <Text style={styles.termsText}>
+                    By continuing, you agree to our Terms of Service & Privacy Policy
                 </Text>
+
+                {/* Debug Info */}
+                {error && (
+                    <View style={{ padding: 20, backgroundColor: '#fee' }}>
+                        <Text style={{ color: 'red' }}>{error}</Text>
+                    </View>
+                )}
             </View>
-        </View>
-    );
+            );
 }
 
-/* ─── Styles ─────────────────────────────────────────── */
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.surfaceLight,
+            /* ─── Styles ─────────────────────────────────────────── */
+            const styles = StyleSheet.create({
+                container: {
+                flex: 1,
+            backgroundColor: Colors.surfaceLight,
     },
 
-    /* Background blob */
-    blobTopRight: {
-        position: 'absolute',
-        top: -60,
-        right: -60,
-        width: 250,
-        height: 250,
-        borderRadius: 125,
-        backgroundColor: 'rgba(255,239,235,0.8)',
+            /* Background blob */
+            blobTopRight: {
+                position: 'absolute',
+            top: -60,
+            right: -60,
+            width: 250,
+            height: 250,
+            borderRadius: 125,
+            backgroundColor: 'rgba(255,239,235,0.8)',
     },
 
-    /* Header */
-    header: {
-        paddingHorizontal: Spacing[6],
-        paddingTop: 56,
-        paddingBottom: 8,
+            /* Header */
+            header: {
+                paddingHorizontal: Spacing[6],
+            paddingTop: 56,
+            paddingBottom: 8,
     },
-    backBtn: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: Colors.neutral[200],
-        alignItems: 'center',
-        justifyContent: 'center',
+            backBtn: {
+                width: 40,
+            height: 40,
+            borderRadius: 20,
+            borderWidth: 1,
+            borderColor: Colors.neutral[200],
+            alignItems: 'center',
+            justifyContent: 'center',
     },
-    backIcon: {
-        fontSize: 18,
-        color: Colors.textMain,
-    },
-
-    /* Content */
-    content: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 32,
-        paddingBottom: 40,
-    },
-    logoCircle: {
-        width: 96,
-        height: 96,
-        borderRadius: 48,
-        backgroundColor: Colors.brand.orange,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 28,
-        ...Shadows.glow,
-    },
-    title: {
-        fontFamily: 'PlayfairDisplay-Bold',
-        fontSize: 36,
-        fontWeight: '700',
-        color: Colors.textMain,
-        marginBottom: 10,
-        letterSpacing: -0.5,
-    },
-    subtitle: {
-        fontFamily: 'DMSans',
-        fontSize: Typography.fontSize.lg,
-        fontWeight: '500',
-        color: Colors.textSub,
-        textAlign: 'center',
-        lineHeight: 26,
-        marginBottom: 36,
+            backIcon: {
+                fontSize: 18,
+            color: Colors.textMain,
     },
 
-    /* Buttons */
-    btnGroup: {
-        width: '100%',
-        gap: 14,
+            /* Content */
+            content: {
+                flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 32,
+            paddingBottom: 40,
     },
-    googleBtn: {
-        width: '100%',
-        height: 56,
-        backgroundColor: Colors.white,
-        borderWidth: 1,
-        borderColor: Colors.neutral[200],
-        borderRadius: BorderRadius.lg,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-        ...Shadows.sm,
+            logoCircle: {
+                width: 96,
+            height: 96,
+            borderRadius: 48,
+            backgroundColor: Colors.brand.orange,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 28,
+            ...Shadows.glow,
     },
-    googleIcon: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: Colors.textMain,
+            title: {
+                fontFamily: 'PlayfairDisplay-Bold',
+            fontSize: 36,
+            fontWeight: '700',
+            color: Colors.textMain,
+            marginBottom: 10,
+            letterSpacing: -0.5,
     },
-    googleText: {
-        fontFamily: 'DMSans-SemiBold',
-        fontSize: 17,
-        fontWeight: '600',
-        color: Colors.textMain,
-    },
-    appleBtn: {
-        width: '100%',
-        height: 56,
-        backgroundColor: Colors.black,
-        borderRadius: BorderRadius.lg,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-        ...Shadows.md,
-    },
-    appleText: {
-        fontFamily: 'DMSans-SemiBold',
-        fontSize: 17,
-        fontWeight: '600',
-        color: Colors.white,
+            subtitle: {
+                fontFamily: 'DMSans',
+            fontSize: Typography.fontSize.lg,
+            fontWeight: '500',
+            color: Colors.textSub,
+            textAlign: 'center',
+            lineHeight: 26,
+            marginBottom: 36,
     },
 
-    /* Divider */
-    divider: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 16,
-        marginVertical: 28,
-        width: '100%',
+            /* Buttons */
+            btnGroup: {
+                width: '100%',
+            gap: 14,
     },
-    dividerLine: {
-        flex: 1,
-        height: 1,
-        backgroundColor: Colors.neutral[200],
+            googleBtn: {
+                width: '100%',
+            height: 56,
+            backgroundColor: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.neutral[200],
+            borderRadius: BorderRadius.lg,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            ...Shadows.sm,
     },
-    dividerLabel: {
-        fontFamily: 'DMSans-Medium',
-        fontSize: Typography.fontSize.sm,
-        fontWeight: '500',
-        color: Colors.neutral[400],
-        letterSpacing: 1.5,
+            googleIcon: {
+                fontSize: 20,
+            fontWeight: '700',
+            color: Colors.textMain,
+    },
+            googleText: {
+                fontFamily: 'DMSans-SemiBold',
+            fontSize: 17,
+            fontWeight: '600',
+            color: Colors.textMain,
+    },
+            appleBtn: {
+                width: '100%',
+            height: 56,
+            backgroundColor: Colors.black,
+            borderRadius: BorderRadius.lg,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            ...Shadows.md,
+    },
+            appleText: {
+                fontFamily: 'DMSans-SemiBold',
+            fontSize: 17,
+            fontWeight: '600',
+            color: Colors.white,
     },
 
-    /* Guest */
-    guestLabel: {
-        fontFamily: 'DMSans-Bold',
-        fontSize: Typography.fontSize.lg,
-        fontWeight: '700',
-        color: Colors.brand.orange,
+            /* Divider */
+            divider: {
+                flexDirection: 'row',
+            alignItems: 'center',
+            gap: 16,
+            marginVertical: 28,
+            width: '100%',
+    },
+            dividerLine: {
+                flex: 1,
+            height: 1,
+            backgroundColor: Colors.neutral[200],
+    },
+            dividerLabel: {
+                fontFamily: 'DMSans-Medium',
+            fontSize: Typography.fontSize.sm,
+            fontWeight: '500',
+            color: Colors.neutral[400],
+            letterSpacing: 1.5,
     },
 
-    /* Error */
-    errorMsg: {
-        fontFamily: 'DMSans',
-        fontSize: Typography.fontSize.sm,
-        color: Colors.error,
-        marginTop: 16,
-        textAlign: 'center',
+            /* Guest */
+            guestLabel: {
+                fontFamily: 'DMSans-Bold',
+            fontSize: Typography.fontSize.lg,
+            fontWeight: '700',
+            color: Colors.brand.orange,
     },
 
-    /* Footer */
-    footer: {
-        paddingHorizontal: Spacing[6],
-        paddingBottom: 36,
-        alignItems: 'center',
+            /* Error */
+            errorMsg: {
+                fontFamily: 'DMSans',
+            fontSize: Typography.fontSize.sm,
+            color: Colors.error,
+            marginTop: 16,
+            textAlign: 'center',
     },
-    terms: {
-        fontFamily: 'DMSans',
-        fontSize: Typography.fontSize.xs,
-        color: Colors.textSub,
-        textAlign: 'center',
-        lineHeight: 18,
+
+            /* Footer */
+            footer: {
+                paddingHorizontal: Spacing[6],
+            paddingBottom: 36,
+            alignItems: 'center',
     },
-    termsLink: {
-        color: Colors.textMain,
-        fontWeight: '600',
-        textDecorationLine: 'underline',
-        textDecorationColor: Colors.brand.orange,
+            terms: {
+                fontFamily: 'DMSans',
+            fontSize: Typography.fontSize.xs,
+            color: Colors.textSub,
+            textAlign: 'center',
+            lineHeight: 18,
+    },
+            termsLink: {
+                color: Colors.textMain,
+            fontWeight: '600',
+            textDecorationLine: 'underline',
+            textDecorationColor: Colors.brand.orange,
     },
 });

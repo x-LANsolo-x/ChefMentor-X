@@ -69,6 +69,74 @@ Do not repeat the instruction."""
         # Tier 3: Static fallback
         return "Keep going, you're doing great! Trust the process."
 
+    # ── Chat with Mentor ───────────────────────────────
+
+    async def chat_with_mentor(self, messages: list[dict], context: dict) -> str:
+        """
+        Handles interactive chat with context.
+        messages: [{"role": "user", "content": "..."}, ...]
+        context: {"recipe_name": "...", "current_step": 1, "instruction": "..."}
+        """
+        system_prompt = f"""You are a professional, encouraging chef mentor helping a user cook "{context.get('recipe_name', 'a recipe')}".
+The user is currently on Step {context.get('current_step', '?')}: "{context.get('step_instruction', '')}".
+
+Your goal is to answer their specific questions, offer substitutions, or troubleshoot issues.
+Keep answers concise (under 3 sentences) unless asked for details.
+Be friendly and supportive.
+"""
+
+        # Format history for Gemini
+        # Gemini expects: contents=[{'role': 'user', 'parts': ['...']}, ...]
+        gemini_history = []
+        for msg in messages:
+            role = 'user' if msg['role'] == 'user' else 'model'
+            gemini_history.append({'role': role, 'parts': [msg['content']]})
+
+        # Add system prompt as the first part of context for Gemini (or rely on system instruction if supported, 
+        # but 2.5 Flash supports system instructions via config. For simplicity, we prepend to first user msg or handle via logic)
+        # We'll use a fresh chat session with system instruction.
+
+        try:
+            # Tier 1: Gemini
+            loop = asyncio.get_event_loop()
+            
+            def run_gemini():
+                model = genai.GenerativeModel(
+                    'gemini-2.5-flash',
+                    system_instruction=system_prompt
+                )
+                chat = model.start_chat(history=gemini_history[:-1] if len(gemini_history) > 1 else [])
+                response = chat.send_message(gemini_history[-1]['parts'][0])
+                return response.text
+
+            response_text = await loop.run_in_executor(None, run_gemini)
+            return response_text.strip()
+            
+        except Exception as e:
+            print(f"⚠️ Gemini chat failed: {e}")
+
+        # Tier 2: Groq Fallback
+        try:
+            # Format for Llama 3
+            groq_messages = [{"role": "system", "content": system_prompt}] + messages
+            
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                partial(
+                    self.groq.chat.completions.create,
+                    model="llama-3.3-70b-versatile",
+                    messages=groq_messages,
+                    max_tokens=150,
+                    temperature=0.7,
+                )
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"⚠️ Groq chat failed: {e}")
+
+        return "I'm having trouble connecting to the chef brain right now. Please try again."
+
     # ── Voice Intent Parsing ───────────────────────────
 
     async def parse_voice_intent(self, text: str) -> dict:

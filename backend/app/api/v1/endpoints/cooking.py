@@ -23,12 +23,22 @@ async def get_current_step(session_id: str, db: AsyncSession = Depends(get_db)):
     service = CookingService(db)
     return await service.get_current_step(session_id)
 
-@router.post("/{session_id}/next", response_model=StepResponse)
-async def next_step(
-    session_id: str, 
-    background_tasks: BackgroundTasks,
-    db: AsyncSession = Depends(get_db)
-):
     """User says 'Next' -> Advance step and return new instruction"""
     service = CookingService(db)
     return await service.advance_step(session_id, background_tasks)
+
+# ── Chat Endpoint ───────────────────────────────────
+
+from pydantic import BaseModel
+from app.services.ai_mentor import AIMentorService
+
+class ChatRequest(BaseModel):
+    messages: list[dict] # [{"role": "user", "content": "..."}]
+    context: dict        # {"recipe_name": "...", "current_step": 1, ...}
+
+@router.post("/chat")
+async def chat_with_mentor(request: ChatRequest):
+    """Interactive chat with the AI Chef"""
+    service = AIMentorService()
+    response = await service.chat_with_mentor(request.messages, request.context)
+    return {"response": response}
