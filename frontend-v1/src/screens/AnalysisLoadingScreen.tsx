@@ -65,10 +65,10 @@ export default function AnalysisLoadingScreen({ navigation, route }: any) {
     useEffect(() => {
         const analyzeImage = async () => {
             try {
-                // Animate progress
+                // Animate progress to 95% then jump to 100% on completion
                 Animated.timing(progressAnim, {
-                    toValue: 100,
-                    duration: 6000,
+                    toValue: 95,
+                    duration: 5500,
                     easing: Easing.out(Easing.cubic),
                     useNativeDriver: false,
                 }).start();
@@ -120,10 +120,17 @@ export default function AnalysisLoadingScreen({ navigation, route }: any) {
 
                 const result = await response.json();
 
-                // Navigate to results
+                // Complete progress animation
+                Animated.timing(progressAnim, {
+                    toValue: 100,
+                    duration: 300,
+                    useNativeDriver: false,
+                }).start();
+
+                // Navigate to results after completion
                 setTimeout(() => {
                     navigation.replace('DiagnosisResult', { analysis: result });
-                }, 6500);
+                }, 6000);
 
             } catch (err: any) {
                 console.error('Analysis error:', err);
