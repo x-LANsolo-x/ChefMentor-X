@@ -807,8 +807,8 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 8,
-    marginBottom: 12,
+    marginTop: 16,
+    marginBottom: 16,
   },
   askAiBtn: {
     flex: 1,
@@ -852,7 +852,8 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: 'row',
     gap: 10,
-    marginTop: 8,
+    marginTop: 16,
+    marginBottom: 8,
   },
   outlineBtn: {
     flex: 1,
@@ -975,7 +976,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: BorderRadius.lg,
     borderWidth: 1.5,
-    borderColor: Colors.neutral[200],
+    borderColor: Colors.brand.orange,
+    backgroundColor: Colors.white,
   },
   micBtnActive: {
     backgroundColor: '#EF4444',
