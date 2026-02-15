@@ -51,6 +51,19 @@
       "expo-secure-store",
       "expo-font",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "ChefMentor X needs access to your photos to analyze dishes.",
+          "cameraPermission": "ChefMentor X needs camera access to take photos of your dishes."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "ChefMentor X needs camera access to take photos of your dishes."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#FF6B4A",

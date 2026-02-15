@@ -34,8 +34,9 @@ export default function LoginScreen({ navigation }: any) {
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: ENV.GOOGLE_CLIENT_ID,
-        iosClientId: 'YOUR_IOS_CLIENT_ID', // Optional: Add to env if needed
-        androidClientId: 'YOUR_ANDROID_CLIENT_ID', // Optional: Add to env if needed
+        iosClientId: 'YOUR_IOS_CLIENT_ID',
+        androidClientId: 'YOUR_ANDROID_CLIENT_ID',
+        redirectUri: 'https://auth.expo.io/@chefmentorx/chefmentor-x',
     });
 
     useEffect(() => {
