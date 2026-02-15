@@ -1,0 +1,92 @@
+=============================================================================
+📧 CHEFMENTOR X - DATABASE CREDENTIALS FOR TEAM
+=============================================================================
+
+Hi Team,
+
+Here are the PostgreSQL database credentials for our ChefMentor X project.
+Please keep these confidential and do not share publicly.
+
+-----------------------------------------------------------------------------
+🔐 POSTGRESQL CONNECTION DETAILS
+-----------------------------------------------------------------------------
+
+Connection String (copy this to your .env file):
+postgresql+asyncpg://postgres:PUwHtSNmtylcCIxoWGBzUgohrAEeyAsD@yamanote.proxy.rlwy.net:18960/railway
+
+Individual Credentials:
+- Host: yamanote.proxy.rlwy.net
+- Port: 18960
+- Database: railway
+- Username: postgres
+- Password: PUwHtSNmtylcCIxoWGBzUgohrAEeyAsD
+- SSL: Required (enabled by default)
+
+-----------------------------------------------------------------------------
+🚀 QUICK SETUP (3 STEPS)
+-----------------------------------------------------------------------------
+
+1. Clone the repository:
+   git clone https://github.com/x-LANsolo-x/BugOff.git
+   cd BugOff/backend
+
+2. Create .env file and add this line:
+   DATABASE_URL=postgresql+asyncpg://postgres:PUwHtSNmtylcCIxoWGBzUgohrAEeyAsD@yamanote.proxy.rlwy.net:18960/railway
+
+3. Install dependencies and run:
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+
+Backend will be running at: http://localhost:8000
+
+-----------------------------------------------------------------------------
+📚 DETAILED DOCUMENTATION
+-----------------------------------------------------------------------------
+
+Check these files in the repository for complete setup instructions:
+
+1. POSTGRESQL_TEAM_CREDENTIALS.md - Full database credentials and examples
+2. TEAM_SETUP_GUIDE.md - Complete setup guide for new developers
+3. DATABASE_STATUS_REPORT.md - Current database status and contents
+
+-----------------------------------------------------------------------------
+🗄️ DATABASE CONTENTS
+-----------------------------------------------------------------------------
+
+Current Status: ✅ Active & Operational
+
+Tables:
+- users (2 accounts)
+- recipes (5 recipes with 30 steps)
+- user_profiles, cooking_sessions, failure_analyses (empty, ready to use)
+
+You can connect using any PostgreSQL client (pgAdmin, DBeaver, DataGrip, etc.)
+
+-----------------------------------------------------------------------------
+🔒 SECURITY REMINDERS
+-----------------------------------------------------------------------------
+
+⚠️ DO NOT commit .env file to git (it's already in .gitignore)
+⚠️ DO NOT share credentials in public channels
+⚠️ Keep this information confidential
+✅ Use environment variables for all credentials
+
+-----------------------------------------------------------------------------
+📞 SUPPORT
+-----------------------------------------------------------------------------
+
+If you have any issues:
+- Check TEAM_SETUP_GUIDE.md for troubleshooting
+- Contact: kumarutkarsh688@gmail.com
+- GitHub: https://github.com/x-LANsolo-x/BugOff
+
+-----------------------------------------------------------------------------
+✅ READY TO START
+-----------------------------------------------------------------------------
+
+The database is production-ready and fully operational. All team members
+can use the same database for development and testing.
+
+Happy coding! 🚀
+
+=============================================================================
