@@ -11,7 +11,62 @@
  *  - Version footer
  */
 
-Tool call argument 'replace' pruned from message history.
+import React, { useEffect } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    Switch,
+    Alert,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../constants/theme';
+import { useAuthStore } from '../stores/authStore';
+import { useSettingsStore } from '../stores/settingsStore';
+import { observer } from 'mobx-react-lite';
+import { voiceService } from '../services/voiceService';
+
+const SettingsScreen = observer(({ navigation }: any) => {
+    const { user, logout } = useAuthStore();
+    const settings = useSettingsStore();
+
+    // Sync voice speed with voice service
+    useEffect(() => {
+        const speedMap = { Slow: 0.8, Normal: 1.0, Fast: 1.3 };
+        voiceService.setRate(speedMap[settings.voiceSpeed]);
+    }, [settings.voiceSpeed]);
+
+    const handleEditProfile = () => {
+        Alert.alert('Edit Profile', 'Profile editing coming soon!');
+    };
+
+    const handlePrivacy = () => {
+        Alert.alert('Privacy & Security', 'Your data is encrypted and secure.');
+    };
+
+    const handleHelp = () => {
+        Alert.alert('Help & Support', 'Contact us at support@chefmentorx.com');
+    };
+
+    const handleDeleteAccount = () => {
+        Alert.alert(
+            'Delete Account',
+            'Are you sure? This action cannot be undone.',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        await logout();
+                        navigation.reset({ index: 0, routes: [{ name: 'Splash' }] });
+                    },
+                },
+            ]
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
