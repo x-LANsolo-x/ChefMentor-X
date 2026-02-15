@@ -378,7 +378,8 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         padding: Spacing[6],
-        paddingBottom: 36,
+        paddingTop: Spacing[4],
+        paddingBottom: 40,
         backgroundColor: 'rgba(253,252,248,0.95)',
     },
     ctaBtn: {
