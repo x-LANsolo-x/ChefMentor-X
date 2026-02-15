@@ -25,28 +25,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../constants/theme';
 import { useAuthStore } from '../stores/authStore';
 import { useSettingsStore } from '../stores/settingsStore';
-import { observer } from 'mobx-react-lite';
 import { voiceService } from '../services/voiceService';
 
-const SettingsScreen = observer(({ navigation }: any) => {
+const SettingsScreen = ({ navigation }: any) => {
     const { user, logout } = useAuthStore();
     const settings = useSettingsStore();
 
     // Sync voice speed with voice service
     useEffect(() => {
         const speedMap = { Slow: 0.8, Normal: 1.0, Fast: 1.3 };
-        voiceService.setRate(speedMap[settings.voiceSpeed]);
+        voiceService.updateSettings({ ttsSpeed: speedMap[settings.voiceSpeed] });
     }, [settings.voiceSpeed]);
 
     const handleEditProfile = () => {
         Alert.alert('Edit Profile', 'Profile editing coming soon!');
     };
 
-    const handlePrivacy = () => {
+    const handlePrivacySecurity = () => {
         Alert.alert('Privacy & Security', 'Your data is encrypted and secure.');
     };
 
-    const handleHelp = () => {
+    const handleHelpSupport = () => {
         Alert.alert('Help & Support', 'Contact us at support@chefmentorx.com');
     };
 
@@ -258,7 +257,7 @@ const SettingsScreen = observer(({ navigation }: any) => {
             </ScrollView>
         </SafeAreaView>
     );
-});
+};
 
 export default SettingsScreen;
 
