@@ -46,6 +46,7 @@ import {
     RecipeListScreen,
     RecipeDetailsScreen,
     LiveCookingScreen,
+    LiveCameraScreen,
     CompletionScreen,
     UploadAnalysisScreen,
     ContextQuestionsScreen,
@@ -78,6 +79,7 @@ function CookTabNavigator() {
             <CookStack.Screen name="RecipeList" component={RecipeListScreen} />
             <CookStack.Screen name="RecipeDetails" component={RecipeDetailsScreen} />
             <CookStack.Screen name="LiveCooking" component={LiveCookingScreen} />
+            <CookStack.Screen name="LiveCamera" component={LiveCameraScreen} options={{ headerShown: false }} />
             <CookStack.Screen name="Completion" component={CompletionScreen} />
         </CookStack.Navigator>
     );
